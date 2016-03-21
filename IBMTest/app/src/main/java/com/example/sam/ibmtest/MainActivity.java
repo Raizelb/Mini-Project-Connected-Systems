@@ -26,6 +26,7 @@ public class MainActivity extends Activity{
 
     private MFPPush push;
     private MFPPushNotificationListener notificationListener;
+    private int mNotificationID = 1;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -65,7 +66,8 @@ public class MainActivity extends Activity{
             @Override
             public void onReceive (final MFPSimplePushNotification message){
                 Log.i("myTag","received notification");
-                notifyUser(message.getAlert());
+                notifyUser(message.getAlert(), mNotificationID);
+                mNotificationID++;
                 //notifyUser(message.getPayload().toString());
             }
         };
@@ -79,13 +81,13 @@ public class MainActivity extends Activity{
         }
     }
 
-    private void notifyUser(String message) {
+    private void notifyUser(String message, int mNotificationId) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("IBM Bluemix")
                         .setContentText(message);
-        int mNotificationId = 001;
+        //int mNotificationId = 001;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
