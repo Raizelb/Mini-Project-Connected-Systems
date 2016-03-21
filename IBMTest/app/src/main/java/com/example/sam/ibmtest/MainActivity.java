@@ -80,8 +80,32 @@ public class MainActivity extends Activity{
         prefSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
+                    push.register(new MFPPushResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String deviceId) {
+                            Log.i("myTag", "Success");
+                        }
+
+                        @Override
+                        public void onFailure(MFPPushException ex) {
+                            Log.i("myTag", "Failure");
+                            Log.i("myTag", ex.toString());
+                        }
+                    });
                     //when you set the switch on
                 } else {
+                    push.unregister(new MFPPushResponseListener<String>() {
+                        @Override
+                        public void onSuccess(String deviceId) {
+                            Log.i("myTag", "Success");
+                        }
+
+                        @Override
+                        public void onFailure(MFPPushException ex) {
+                            Log.i("myTag", "Failure");
+                            Log.i("myTag", ex.toString());
+                        }
+                    });
                     //when you set the switch off
                 }
             }
