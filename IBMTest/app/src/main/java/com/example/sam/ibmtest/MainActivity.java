@@ -24,8 +24,8 @@ import java.util.List;
         */
 public class MainActivity extends Activity{
 
-    final String application_route = "http://ucl-sm.eu-gb.mybluemix.net";
-    final String application_GUID = "aec6a47d-0241-4553-94df-6df7197dd015";
+    final String application_route = "http://connsys-bm.eu-gb.mybluemix.net";
+    final String application_GUID = "ca1f0936-6355-42ee-a43c-34a5ce776d6a";
 
     private MFPPush push;
     private MFPPushNotificationListener notificationListener;
