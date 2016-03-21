@@ -14,6 +14,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificatio
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 /**
  * Created by Sam on 19/03/2016.
@@ -49,13 +50,13 @@ public class MainActivity extends Activity{
         push.register(new MFPPushResponseListener<String>() {
             @Override
             public void onSuccess(String deviceId) {
-                Log.i("myTag","Success");
+                Log.i("myTag", "Success");
             }
 
             @Override
             public void onFailure(MFPPushException ex) {
-                Log.i("myTag","Failure");
-                Log.i("myTag",ex.toString());
+                Log.i("myTag", "Failure");
+                Log.i("myTag", ex.toString());
             }
         });
 
@@ -64,7 +65,8 @@ public class MainActivity extends Activity{
             @Override
             public void onReceive (final MFPSimplePushNotification message){
                 Log.i("myTag","received notification");
-                notifyUser();
+                notifyUser(message.getAlert());
+                //notifyUser(message.getPayload().toString());
             }
         };
     }
@@ -77,12 +79,12 @@ public class MainActivity extends Activity{
         }
     }
 
-    private void notifyUser() {
+    private void notifyUser(String message) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("IBM Bluemix")
-                        .setContentText("Someone entered your room");
+                        .setContentText(message);
         int mNotificationId = 001;
         // Gets an instance of the NotificationManager service
         NotificationManager mNotifyMgr =
