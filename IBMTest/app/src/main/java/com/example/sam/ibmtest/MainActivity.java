@@ -2,6 +2,7 @@ package com.example.sam.ibmtest;
 
 import android.app.Activity;
 import android.app.NotificationManager;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -26,15 +27,22 @@ public class MainActivity extends Activity{
 
     final String application_route = "http://connsys-bm.eu-gb.mybluemix.net";
     final String application_GUID = "ca1f0936-6355-42ee-a43c-34a5ce776d6a";
+    private static final String SETTING_PREF = "SettingPref";
+    private static final String STATE_PREF = "StatePref";
 
     private MFPPush push;
     private MFPPushNotificationListener notificationListener;
     private int mNotificationID = 1;
+    private SharedPreferences preferences;
+    private MFPPushResponseListener<String> responseListener;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_main);
+
+        //Init views
+        Switch prefSwitch = (Switch) findViewById(R.id.switch1);
 
         try {
             BMSClient.getInstance().initialize(getApplicationContext(), application_route, application_GUID);
@@ -51,7 +59,7 @@ public class MainActivity extends Activity{
         push.initialize(getApplicationContext());
 
         //Register Android devices
-        push.register(new MFPPushResponseListener<String>() {
+        responseListener = new MFPPushResponseListener<String>() {
             @Override
             public void onSuccess(String deviceId) {
                 Log.i("myTag", "Success");
@@ -62,7 +70,15 @@ public class MainActivity extends Activity{
                 Log.i("myTag", "Failure");
                 Log.i("myTag", ex.toString());
             }
-        });
+        };
+
+        preferences = this.getSharedPreferences(SETTING_PREF, 0);
+        if(preferences.getBoolean(STATE_PREF, true)) {
+            push.register(responseListener);
+            prefSwitch.setChecked(true);
+        } else {
+            prefSwitch.setChecked(false);
+        }
 
         //Handles the notification when it arrives
         notificationListener = new MFPPushNotificationListener() {
@@ -76,41 +92,27 @@ public class MainActivity extends Activity{
         };
 
         //Switch stuff
-        Switch prefSwitch = (Switch) findViewById(R.id.switch1);
         prefSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    push.register(new MFPPushResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String deviceId) {
-                            Log.i("myTag", "Success");
-                        }
-
-                        @Override
-                        public void onFailure(MFPPushException ex) {
-                            Log.i("myTag", "Failure");
-                            Log.i("myTag", ex.toString());
-                        }
-                    });
+                    push.register(responseListener);
+                    savePreferences(STATE_PREF, true);
                     //when you set the switch on
                 } else {
-                    push.unregister(new MFPPushResponseListener<String>() {
-                        @Override
-                        public void onSuccess(String deviceId) {
-                            Log.i("myTag", "Success");
-                        }
-
-                        @Override
-                        public void onFailure(MFPPushException ex) {
-                            Log.i("myTag", "Failure");
-                            Log.i("myTag", ex.toString());
-                        }
-                    });
+                    push.unregister(responseListener);
+                    savePreferences(STATE_PREF, false);
                     //when you set the switch off
                 }
             }
         });
     }
+
+    private void savePreferences(String name, boolean value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(name, value);
+        editor.apply();
+    }
+
 
     @Override
     protected void onResume(){
