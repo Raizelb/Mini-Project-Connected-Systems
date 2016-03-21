@@ -5,6 +5,9 @@ import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TextView;
 
 import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
@@ -71,6 +74,18 @@ public class MainActivity extends Activity{
                 //notifyUser(message.getPayload().toString());
             }
         };
+
+        //Switch stuff
+        Switch prefSwitch = (Switch) findViewById(R.id.switch1);
+        prefSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked) {
+                    //when you set the switch on
+                } else {
+                    //when you set the switch off
+                }
+            }
+        });
     }
 
     @Override

@@ -7,8 +7,8 @@
 #include <BMA222.h>
 
 // Wireless network parameters
-char ssid[] = "TRENDnet410_2.4GHz_177D";          // Your wireless network name also called SSID
-char password[] = "410CE1DE4AA";       // Your wireless network password
+char ssid[] = "test";          // Your wireless network name also called SSID
+char password[] = "focq9542";       // Your wireless network password
 
 // IBM IoT Foundation Cloud Settings
 /* When adding a device on internetofthings.ibmcloud.com the following information will be generated:

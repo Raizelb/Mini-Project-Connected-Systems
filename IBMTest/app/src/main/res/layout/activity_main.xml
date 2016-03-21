@@ -8,4 +8,51 @@
     android:background="@color/white">
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Notifications"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/switch1"
+        android:layout_alignTop="@+id/textView"
+        android:layout_toEndOf="@+id/textView"
+        android:layout_marginStart="30dp"
+        android:checked="true"
+        android:enabled="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Log"
+        android:id="@+id/textView2"
+        android:layout_below="@+id/switch1"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="asdf\nasdf"
+            android:id="@+id/textView3"
+            android:layout_below="@+id/textView2"
+            android:layout_alignParentStart="true" />
+    </ScrollView>
+
 </RelativeLayout>
