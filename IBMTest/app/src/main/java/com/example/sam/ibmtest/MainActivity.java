@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -18,7 +20,7 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificatio
 import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 
 import java.net.MalformedURLException;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by Sam on 19/03/2016.
@@ -29,12 +31,15 @@ public class MainActivity extends Activity{
     final String application_GUID = "ca1f0936-6355-42ee-a43c-34a5ce776d6a";
     private static final String SETTING_PREF = "SettingPref";
     private static final String STATE_PREF = "StatePref";
+    private static final String LOG_PREF = "LogPref";
 
     private MFPPush push;
     private MFPPushNotificationListener notificationListener;
     private int mNotificationID = 1;
     private SharedPreferences preferences;
     private MFPPushResponseListener<String> responseListener;
+    private TextView logView;
+    private String logText;
 
     @Override
     public void onCreate(Bundle savedInstaceState) {
@@ -43,6 +48,8 @@ public class MainActivity extends Activity{
 
         //Init views
         Switch prefSwitch = (Switch) findViewById(R.id.switch1);
+        logView = (TextView) findViewById(R.id.textView3);
+        Button clearButton = (Button) findViewById(R.id.button);
 
         try {
             BMSClient.getInstance().initialize(getApplicationContext(), application_route, application_GUID);
@@ -84,10 +91,14 @@ public class MainActivity extends Activity{
         notificationListener = new MFPPushNotificationListener() {
             @Override
             public void onReceive (final MFPSimplePushNotification message){
-                Log.i("myTag","received notification");
+                Log.i("myTag", "received notification");
                 notifyUser(message.getAlert(), mNotificationID);
                 mNotificationID++;
-                //notifyUser(message.getPayload().toString());
+                if(!Objects.equals(logText, "")) {
+                    setLog(message.getAlert() + "\n" + logText);
+                } else {
+                    setLog(message.getAlert());
+                }
             }
         };
 
@@ -105,6 +116,16 @@ public class MainActivity extends Activity{
                 }
             }
         });
+
+        //Log stuff
+        logText = preferences.getString(LOG_PREF, "");
+        logView.setText(logText);
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLog("");
+            }
+        });
     }
 
     private void savePreferences(String name, boolean value) {
@@ -113,6 +134,17 @@ public class MainActivity extends Activity{
         editor.apply();
     }
 
+    private void savePreferences(String name, String value) {
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(name, value);
+        editor.apply();
+    }
+
+    private void setLog(String string) {
+        logText = string;
+        logView.setText(logText);
+        savePreferences(LOG_PREF, logText);
+    }
 
     @Override
     protected void onResume(){
@@ -136,7 +168,5 @@ public class MainActivity extends Activity{
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
 
     }
-
-
 
 }
