@@ -47,7 +47,7 @@ public class MainActivity extends Activity{
         setContentView(R.layout.activity_main);
 
         //Init views
-        Switch prefSwitch = (Switch) findViewById(R.id.switch1);
+        final Switch prefSwitch = (Switch) findViewById(R.id.switch1);
         logView = (TextView) findViewById(R.id.textView3);
         Button clearButton = (Button) findViewById(R.id.button);
 
@@ -74,6 +74,8 @@ public class MainActivity extends Activity{
 
             @Override
             public void onFailure(MFPPushException ex) {
+                setLog("Failed to unregister" + "\n" + logText);
+                prefSwitch.setChecked(true);
                 Log.i("myTag", "Failure");
                 Log.i("myTag", ex.toString());
             }
